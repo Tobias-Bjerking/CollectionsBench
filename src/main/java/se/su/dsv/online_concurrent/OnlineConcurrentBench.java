@@ -11,6 +11,8 @@ import java.util.List;
 
 public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
+    static int x = 0;
+
     @Param
     OnlineConcurrentFact impl;
 
@@ -28,6 +30,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @Setup(Level.Iteration)
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
+        System.out.println("=================" + x++ + "=================");
         sharedEmptyList = impl.maker.get();
 
         valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_DICTIONARY);
@@ -47,13 +50,6 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         blackhole.consume(sharedEmptyList.contains(values[index]));
     }
 
-    // index operation / insert
-    @Benchmark
-    @Group("OnlineConcurrent")
-    @GroupThreads(1)
-    public void insert(){
-        sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
-    }
 
     // iteration / for each
     @Benchmark
@@ -65,12 +61,20 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         }
     }
 
+    // index operation / insert
+    @Benchmark
+    @Group("OnlineConcurrent")
+    @GroupThreads(1)
+    public void insert(){
+        sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
+    }
+
     // search and remove / remove
     @Benchmark
     @Group("OnlineConcurrent")
     @GroupThreads(1)
     public void remove(){
-        sharedEmptyList.remove(valuesGenerator.generateIndex(size));
+        sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
     }
 
 
