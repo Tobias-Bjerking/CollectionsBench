@@ -41,11 +41,15 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         blackhole = bh;
     }
 
+    //===========================================================
+    // READ
+    //===========================================================
+
     // contains / look up
     @Benchmark
-    @Group("OnlineConcurrent")
+    @Group("Read")
     @GroupThreads(1)
-    public void contains() {
+    public void containsRead() {
         int index = valuesGenerator.generateIndex(size);
         blackhole.consume(sharedEmptyList.contains(values[index]));
     }
@@ -53,9 +57,9 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     // iteration / for each
     @Benchmark
-    @Group("OnlineConcurrent")
+    @Group("Read")
     @GroupThreads(1)
-    public void iterate() {
+    public void iterateRead() {
         for(Object obj: sharedEmptyList){
             blackhole.consume(obj);
         }
@@ -63,20 +67,98 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     // index operation / insert
     @Benchmark
-    @Group("OnlineConcurrent")
+    @Group("Read")
     @GroupThreads(1)
-    public void insert(){
+    public void insertRead(){
         sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
     }
 
     // search and remove / remove
     @Benchmark
-    @Group("OnlineConcurrent")
+    @Group("Read")
     @GroupThreads(1)
-    public void remove(){
+    public void removeRead(){
         sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
     }
 
+    //===========================================================
+    // WRITE
+    //===========================================================
 
+    // contains / look up
+    @Benchmark
+    @Group("Write")
+    @GroupThreads(1)
+    public void containsWrite() {
+        int index = valuesGenerator.generateIndex(size);
+        blackhole.consume(sharedEmptyList.contains(values[index]));
+    }
+
+
+    // iteration / for each
+    @Benchmark
+    @Group("Write")
+    @GroupThreads(1)
+    public void iterateWrite() {
+        for(Object obj: sharedEmptyList){
+            blackhole.consume(obj);
+        }
+    }
+
+    // index operation / insert
+    @Benchmark
+    @Group("Write")
+    @GroupThreads(1)
+    public void insertWrite(){
+        sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
+    }
+
+    // search and remove / remove
+    @Benchmark
+    @Group("Write")
+    @GroupThreads(1)
+    public void removeWrite(){
+        sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
+    }
+
+    //===========================================================
+    // ITERATE
+    //===========================================================
+
+    // contains / look up
+    @Benchmark
+    @Group("Iterate")
+    @GroupThreads(1)
+    public void containsIterate() {
+        int index = valuesGenerator.generateIndex(size);
+        blackhole.consume(sharedEmptyList.contains(values[index]));
+    }
+
+
+    // iteration / for each
+    @Benchmark
+    @Group("Write")
+    @GroupThreads(1)
+    public void iterateIterate() {
+        for(Object obj: sharedEmptyList){
+            blackhole.consume(obj);
+        }
+    }
+
+    // index operation / insert
+    @Benchmark
+    @Group("Iterate")
+    @GroupThreads(1)
+    public void insertIterate(){
+        sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
+    }
+
+    // search and remove / remove
+    @Benchmark
+    @Group("Iterate")
+    @GroupThreads(1)
+    public void removeIterate(){
+        sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
+    }
 
 }
