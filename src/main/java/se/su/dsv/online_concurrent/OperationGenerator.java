@@ -2,13 +2,15 @@ package se.su.dsv.online_concurrent;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class OperationGenerator {
+    private AtomicInteger index;
+    private ArrayList<Integer> operationSequence;
 
-    public static List<Integer> generateOperationSequence(int lookupPercentage, int insertPercentage, int forEachPercentage, int removePercentage) {
-        List<Integer> operationSequence = new ArrayList<>();
-
+    public OperationGenerator(int lookupPercentage, int insertPercentage, int forEachPercentage, int removePercentage) {
+        operationSequence = new ArrayList<>();
+        index = new AtomicInteger(0);
         for (int i = 0; i < lookupPercentage; i++)
             operationSequence.add(1);
 
@@ -22,7 +24,13 @@ public class OperationGenerator {
             operationSequence.add(4);
 
         Collections.shuffle(operationSequence);
-        return operationSequence;
     }
 
+    public int getOperation(){
+        return operationSequence.get((index.incrementAndGet()-1)%100);
+    }
+
+    public void reset(){
+        index.set(0);
+    }
 }

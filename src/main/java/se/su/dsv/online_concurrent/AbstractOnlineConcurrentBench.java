@@ -24,7 +24,7 @@ import org.openjdk.jmh.annotations.Warmup;
 @State(Scope.Benchmark)
 public class AbstractOnlineConcurrentBench {
 
-    @Param({ "100", "1000", "10000", "100000", "1000000" })
+    @Param({ "128", "1024", "8192", "131072", "1048576" })
     protected int size;
 
     @Param({ "42" })
