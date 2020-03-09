@@ -4,7 +4,7 @@ import datetime
 import subprocess
 
 time = datetime.datetime.now()
-timeformat = "%Y%m%d_%H:%M:%S"
+timeformat = "%Y%m%d_%H-%M-%S"
 timestamp = time.strftime(timeformat)
 
 base_path = timestamp + "_Benchmark"
