@@ -52,6 +52,7 @@ dependencies {
     compile group: 'org.javolution', name: 'javolution-core-java', version: '6.0.0'
     compile group: 'org.scala-lang', name: 'scala-library', version: '2.12.6'
 
+    compile project(":OnlineAdaptiveConcurrentDataStructure")
     // compile group: 'in.jlibs', name: 'jlibs-core', version:'2.2.1'
     // compile group: 'de.heidelberg.pvs.diego', name: 'collections-online-adapter', version:'0.0.1-SNAPSHOT'
 

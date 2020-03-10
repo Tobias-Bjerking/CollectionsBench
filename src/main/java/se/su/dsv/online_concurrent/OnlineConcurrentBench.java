@@ -5,12 +5,13 @@ import de.heidelberg.pvs.container_bench.generators.ElementGenerator;
 import de.heidelberg.pvs.container_bench.generators.GeneratorFactory;
 import de.heidelberg.pvs.container_bench.generators.PayloadType;
 import org.openjdk.jmh.annotations.*;
+import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EvenOnlineConcurrentBench extends AbstractOnlineConcurrentBench{
+public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     @Param
     OnlineConcurrentFact impl;
@@ -21,7 +22,7 @@ public class EvenOnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     Blackhole blackhole;
 
-    List<Object> sharedEmptyList;
+    OnlineAdaptiveConcurrentDataStructure<Object> sharedEmptyList;
     OperationGenerator operations;
 
     @Param("STRING_DICTIONARY")
@@ -69,36 +70,36 @@ public class EvenOnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     public void evenIntensity(){
         switch (operations.getOperation()){
             case 1:
-                containsRead();
+                contains();
                 break;
             case 2:
-                insertRead();
+                insert();
                 break;
             case 3:
-                iterateRead();
+                iterate();
                 break;
             case 4:
-                removeRead();
+                remove();
                 break;
         }
     }
 
-    public void containsRead() {
+    public void contains() {
         int index = valuesGenerator.generateIndex(size);
         blackhole.consume(sharedEmptyList.contains(values[index]));
     }
 
-    public void insertRead(){
+    public void insert(){
         sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
     }
 
-    public void iterateRead() {
+    public void iterate() {
         for(Object obj: sharedEmptyList){
             blackhole.consume(obj);
         }
     }
 
-    public void removeRead(){
+    public void remove(){
         sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
     }
 }

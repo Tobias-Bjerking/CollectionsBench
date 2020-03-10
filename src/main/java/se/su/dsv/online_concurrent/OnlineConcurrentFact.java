@@ -1,16 +1,17 @@
 package se.su.dsv.online_concurrent;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
+import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
+
 
 public enum OnlineConcurrentFact {
 
-    JDK_COPYONWRITEARRAYLIST(java.util.concurrent.CopyOnWriteArrayList::new);
+    ONLINE_ADAPTIVE(se.su.dsv.OnlineAdaptiveConcurrentDataStructure::new);
 
-    public final Supplier<List<Object>> maker;
+    public final Supplier<OnlineAdaptiveConcurrentDataStructure<Object>> maker;
 
-    private OnlineConcurrentFact(Supplier<List<Object>> maker) {
+    private OnlineConcurrentFact(Supplier<OnlineAdaptiveConcurrentDataStructure<Object>> maker) {
         this.maker = maker;
     }
 }
