@@ -25,6 +25,8 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     OnlineAdaptiveConcurrentDataStructure<Object> sharedEmptyList;
     OperationGenerator operations;
 
+    int iterations = 0;
+
     @Param("STRING_DICTIONARY")
     PayloadType payloadType;
 
@@ -48,26 +50,24 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
             default:
                 throw new RuntimeException("Wrong test type: " + testType);
         }
-    }
-
-    @Setup(Level.Iteration)
-    @SuppressWarnings("unchecked")
-    public void setup(Blackhole bh) throws IOException {
         sharedEmptyList = impl.maker.get();
-
         valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_DICTIONARY);
         valuesGenerator.init(size, seed);
 
         values = valuesGenerator.generateArray(size);
 
         blackhole = bh;
+    }
 
+    @Setup(Level.Iteration)
+    @SuppressWarnings("unchecked")
+    public void setup(Blackhole bh) throws IOException {
         operations.reset();
     }
 
 
     @Benchmark
-    public void evenIntensity(){
+    public void operationsRunner(){
         switch (operations.getOperation()){
             case 1:
                 contains();

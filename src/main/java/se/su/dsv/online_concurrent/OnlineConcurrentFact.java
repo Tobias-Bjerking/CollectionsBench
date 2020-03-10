@@ -1,13 +1,18 @@
 package se.su.dsv.online_concurrent;
 
-import java.util.List;
 import java.util.function.Supplier;
 import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 
 public enum OnlineConcurrentFact {
 
-    ONLINE_ADAPTIVE(se.su.dsv.OnlineAdaptiveConcurrentDataStructure::new);
+    ONLINE_ADAPTIVE(() ->
+            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure()),
+    WRAPPED_MAP(() ->
+            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure(OnlineAdaptiveConcurrentDataStructure.State.MAP, false)),
+    WRAPPED_LIST(() ->
+            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure(OnlineAdaptiveConcurrentDataStructure.State.LIST, false));
+
 
     public final Supplier<OnlineAdaptiveConcurrentDataStructure<Object>> maker;
 
