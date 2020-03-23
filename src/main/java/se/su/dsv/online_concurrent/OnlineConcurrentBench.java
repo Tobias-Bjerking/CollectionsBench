@@ -8,9 +8,9 @@ import org.openjdk.jmh.annotations.*;
 import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+//TODO
+// Populate DS at start up.
 public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     @Param
@@ -63,6 +63,9 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
         operations.reset();
+        if(sharedEmptyList.hasSwitched()){
+            System.out.println("===============================\nHAS SWITCHED!!!\n===============================");
+        }
     }
 
 
@@ -82,6 +85,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
                 remove();
                 break;
         }
+
     }
 
     public void contains() {

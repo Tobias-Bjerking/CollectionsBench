@@ -6,8 +6,10 @@ import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 public enum OnlineConcurrentFact {
 
-    ONLINE_ADAPTIVE(() ->
-            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure()),
+    ONLINE_ADAPTIVE_LIST(() ->
+            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure(OnlineAdaptiveConcurrentDataStructure.State.LIST)),
+    ONLINE_ADAPTIVE_MAP(() ->
+            new se.su.dsv.OnlineAdaptiveConcurrentDataStructure(OnlineAdaptiveConcurrentDataStructure.State.MAP)),
     WRAPPED_MAP(() ->
             new se.su.dsv.OnlineAdaptiveConcurrentDataStructure(OnlineAdaptiveConcurrentDataStructure.State.MAP, false)),
     WRAPPED_LIST(() ->

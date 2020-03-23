@@ -27,7 +27,7 @@ public class OperationGenerator {
     }
 
     public int getOperation(){
-        return operationSequence.get((index.incrementAndGet()-1)%100);
+        return operationSequence.get((index.getAndIncrement())%100);
     }
 
     public void reset(){
