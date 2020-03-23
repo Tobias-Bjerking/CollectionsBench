@@ -2,6 +2,7 @@ import sys
 import os
 import datetime
 import subprocess
+import pandas as pd
 
 time = datetime.datetime.now()
 timeformat = "%Y%m%d_%H-%M-%S"
@@ -23,7 +24,7 @@ iterations = sys.argv[4] if num_arguments > 4 else 40
 for t in ['even', 'update', 'iterate']:
 	for i in range(1, 4):
 		threads = 2**i
-		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + ".csv"
+		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + _"threads-"+2**i ".csv"
 		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r 5 -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads)
 
 		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
@@ -34,5 +35,9 @@ for t in ['even', 'update', 'iterate']:
 			if output:
 				print output.strip()
 
+#combine csvs
+all_files = glob.glob(os.path.join(".", "*.csv"))
 
-
+df_merged = (pd.read_csv(f, sep=',') for f in all_files)
+df_merged   = pd.concat(df_from_each_file, ignore_index=True)
+df_merged.to_csv( "merged.csv")
