@@ -99,6 +99,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     public void iterate() {
         for(Object obj: sharedEmptyList){
+            // while(!Thread.currentThread.isInteruptted()){}
             blackhole.consume(obj);
         }
     }
