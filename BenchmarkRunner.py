@@ -2,7 +2,6 @@ import sys
 import os
 import datetime
 import subprocess
-import pandas as pd
 
 time = datetime.datetime.now()
 timeformat = "%Y%m%d_%H-%M-%S"
@@ -20,12 +19,13 @@ benchmarks = sys.argv[1] if num_arguments > 1 else 'Online'
 implementations = ('-p impl=' + sys.argv[2]) if num_arguments > 2 else ''
 warmup_iterations = sys.argv[3] if num_arguments > 3 else 20
 iterations = sys.argv[4] if num_arguments > 4 else 40
+iteration_time = sys.argv[5] if num_arguments > 5 else 1
 
-for t in ['even', 'update', 'iterate']:
+for t in ['iterate', 'update', 'even']:
 	for i in range(1, 4):
 		threads = 2**i
-		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+2**i+ ".csv"
-		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r 5 -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads)
+		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(2**i) + ".csv"
+		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time)
 
 		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 		while True:
@@ -37,9 +37,9 @@ for t in ['even', 'update', 'iterate']:
 
 
 #combine files.
-all_files = glob.glob(os.path.join(".", "*.csv"))
-all_files = [x for x in all_files if x != "./merged.csv"]
-f = open("merged.csv", "a")
+all_files = glob.glob(os.path.join(base_path, "*.csv"))
+all_files = [x for x in all_files if x != base_path + "/merged.csv"]
+f = open(base_path + "/merged.csv", "a")
 
 f1 = open(all_files[0])
 first_row = f1.readline()
