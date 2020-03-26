@@ -8,6 +8,7 @@ import org.openjdk.jmh.annotations.*;
 import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 //TODO
 // Populate DS at start up.
@@ -52,9 +53,11 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         }
         sharedEmptyList = impl.maker.get();
         valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_DICTIONARY);
-        valuesGenerator.init(size, seed);
+        valuesGenerator.init(size*2, seed);
 
-        values = valuesGenerator.generateArray(size);
+        values = valuesGenerator.generateArray(size*2);
+
+        sharedEmptyList.setup(Arrays.copyOfRange(values, 0, size));
 
         blackhole = bh;
     }
@@ -63,6 +66,8 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
         operations.reset();
+        sharedEmptyList.clear();
+        sharedEmptyList.setup(Arrays.copyOfRange(values, 0, size));
         if(sharedEmptyList.hasSwitched()){
             System.out.println("===============================\nHAS SWITCHED!!!\n===============================");
         }
