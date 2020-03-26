@@ -12,5 +12,6 @@ benchmarks.jar
 *.class
 *.swo
 *.swp
+*.sh
 
 \.idea/
