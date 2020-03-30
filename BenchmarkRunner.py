@@ -19,8 +19,8 @@ if num_arguments < 3:
 benchmarks = sys.argv[1] if num_arguments > 1 else 'Online'
 implementations = ('-p impl=' + sys.argv[2]) if num_arguments > 2 else ''
 warmup_iterations = sys.argv[3] if num_arguments > 3 else 20
-iterations = sys.argv[4] if num_arguments > 4 else 40
-iteration_time = sys.argv[5] if num_arguments > 5 else 1
+iterations = sys.argv[4] if num_arguments > 4 else 20
+iteration_time = sys.argv[5] if num_arguments > 5 else 10
 
 for t in ['iterate', 'update', 'even']:
 	for i in range(1, 4):
