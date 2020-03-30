@@ -8,10 +8,14 @@ import org.openjdk.jmh.annotations.*;
 import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 //TODO
-// Populate DS at start up.
+// Use two element generators, one for populating at start and to be used in the delete method
+// and one to be used for adding new elements in the add method.
 public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
+
+    private final int generatorSize = 1048576*2;
 
     @Param
     OnlineConcurrentFact impl;
@@ -22,7 +26,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     Blackhole blackhole;
 
-    OnlineAdaptiveConcurrentDataStructure<Object> sharedEmptyList;
+    OnlineAdaptiveConcurrentDataStructure<Object> adaptiveList;
     OperationGenerator operations;
 
     int iterations = 0;
@@ -47,14 +51,18 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
             case "update":
                 operations = new OperationGenerator(20, 28, 30, 22);
                 break;
+            case "iteratepure":
+                operations = new OperationGenerator(0,0,100,0);
             default:
                 throw new RuntimeException("Wrong test type: " + testType);
         }
-        sharedEmptyList = impl.maker.get();
         valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_DICTIONARY);
-        valuesGenerator.init(size, seed);
+        valuesGenerator.init(generatorSize, seed);
 
-        values = valuesGenerator.generateArray(size);
+        values = valuesGenerator.generateArray(generatorSize);
+
+        adaptiveList = impl.maker.get();
+        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
 
         blackhole = bh;
     }
@@ -63,9 +71,8 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
         operations.reset();
-        if(sharedEmptyList.hasSwitched()){
-            System.out.println("===============================\nHAS SWITCHED!!!\n===============================");
-        }
+        adaptiveList = impl.maker.get();
+        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
     }
 
 
@@ -89,16 +96,16 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     }
 
     public void contains() {
-        int index = valuesGenerator.generateIndex(size);
-        blackhole.consume(sharedEmptyList.contains(values[index]));
+        int index = valuesGenerator.generateIndex(generatorSize);
+        blackhole.consume(adaptiveList.contains(values[index]));
     }
 
     public void insert(){
-        sharedEmptyList.add(values[valuesGenerator.generateIndex(size)]);
+        adaptiveList.add(values[valuesGenerator.generateIndex(generatorSize)]);
     }
 
     public void iterate() {
-        for(Object obj: sharedEmptyList){
+        for(Object obj: adaptiveList){
             if (Thread.currentThread().isInterrupted())
                 break;
             blackhole.consume(obj);
@@ -106,6 +113,6 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     }
 
     public void remove(){
-        sharedEmptyList.remove(values[valuesGenerator.generateIndex(size)]);
+        adaptiveList.remove(values[valuesGenerator.generateIndex(generatorSize)]);
     }
 }
