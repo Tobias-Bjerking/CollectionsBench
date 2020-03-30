@@ -51,6 +51,8 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
             case "update":
                 operations = new OperationGenerator(20, 28, 30, 22);
                 break;
+            case "iteratepure":
+                operations = new OperationGenerator(0,0,100,0);
             default:
                 throw new RuntimeException("Wrong test type: " + testType);
         }
