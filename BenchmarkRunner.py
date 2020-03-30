@@ -22,10 +22,9 @@ benchmarks = sys.argv[1] if num_arguments > 1 else 'Online'
 implementations = ('-p impl=' + sys.argv[2]) if num_arguments > 2 else ''
 warmup_iterations = sys.argv[3] if num_arguments > 3 else 1
 iterations = sys.argv[4] if num_arguments > 4 else 1
-iteration_time = sys.argv[5] if num_arguments > 5 else 1
+iteration_time = sys.argv[5] if num_arguments > 5 else 10
 
-#for t in ['iterate', 'update', 'even']:
-for t in ['iteratepure']:
+for t in ['iterate', 'iteratepure', 'update', 'even']:
 	for i in range(1, 4):
 		threads = 2**i
 		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(2**i) + ".csv"
@@ -42,8 +41,8 @@ for t in ['iteratepure']:
 
 #combine files.
 all_files = glob.glob(os.path.join(base_path, "*.csv"))
-all_files = [x for x in all_files if x != base_path + "/merged.csv"]
-f = open(base_path + "/merged.csv", "a")
+all_files = [x for x in all_files if x != base_path + "/" + timestamp + "-merged.csv"]
+f = open(base_path + "/" + timestamp + "-merged.csv", "w+")
 
 f1 = open(all_files[0])
 first_row = f1.readline()
@@ -62,13 +61,13 @@ for x in all_files:
 f.close()
 
 
-df = pd.read_csv("./merged.csv")
+df = pd.read_csv("./" + timestamp + "-merged.csv")
 
 plt.style.use('ggplot')
 
 
 for size in [128, 1024,8192,16384,131072,1048576]:
-    for test in ['even', 'iterate', 'update']:
+    for test in ['iterate', 'iteratepure', 'update', 'even']:
         ax = plt.gca()
         selected = df[(df['Param: size'] == size) & (df['Param: testType'] == test)]
         selected.groupby(['Param: impl', 'Param: testType']).plot(kind='line',x='Threads',y='Score',ax=ax)
