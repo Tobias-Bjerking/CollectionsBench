@@ -57,7 +57,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
             default:
                 throw new RuntimeException("Wrong test type: " + testType);
         }
-        valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_DICTIONARY);
+        valuesGenerator = (ElementGenerator<String>) GeneratorFactory.buildRandomGenerator(PayloadType.STRING_UNIFORM);
         valuesGenerator.init(generatorSize, seed);
 
         values = valuesGenerator.generateArray(generatorSize);
