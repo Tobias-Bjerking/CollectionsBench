@@ -11,6 +11,7 @@ import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OnlineConcurrentListBench extends AbstractOnlineConcurrentBench{
@@ -25,7 +26,7 @@ public class OnlineConcurrentListBench extends AbstractOnlineConcurrentBench{
 
     Blackhole blackhole;
 
-    CopyOnWriteArrayList<Object> adaptiveList;
+    Collection<Object> adaptiveList;
     OperationGenerator operations;
 
     @Param("STRING_UNIFORM")
@@ -83,7 +84,7 @@ public class OnlineConcurrentListBench extends AbstractOnlineConcurrentBench{
                 insert();
                 break;
             case 3:
-                iterate();
+                //iterate();
                 break;
             case 4:
                 remove();
@@ -102,11 +103,11 @@ public class OnlineConcurrentListBench extends AbstractOnlineConcurrentBench{
     }
 
     @Benchmark
-    public void iterate() {
+    public void iterate(Blackhole bh) {
         for(Object obj: adaptiveList){
             if (Thread.currentThread().isInterrupted())
                 break;
-            blackhole.consume(obj);
+            bh.consume(obj);
         }
     }
 

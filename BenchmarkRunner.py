@@ -29,7 +29,7 @@ for t in ['iteratepure']:
 	for i in [0,1,4]:
 		threads = 2**i
 		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(2**i) + ".csv"
-		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time)
+		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -f 1 -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time)
 
 		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 		while True:
