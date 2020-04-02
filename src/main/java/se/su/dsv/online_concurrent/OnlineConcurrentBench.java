@@ -24,8 +24,6 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     ElementGenerator<String> valuesGenerator;
 
-    Blackhole blackhole;
-
     OnlineAdaptiveConcurrentDataStructure<Object> adaptiveList;
     OperationGenerator operations;
 
@@ -39,7 +37,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     @Setup(Level.Trial)
     @SuppressWarnings("unchecked")
-    public void init(Blackhole bh) throws  IOException {
+    public void init() throws  IOException {
         System.out.println("=====Initiating operation distibution: " + testType + "=====");
         switch (testType){
             case "even":
@@ -51,9 +49,6 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
             case "update":
                 operations = new OperationGenerator(20, 28, 30, 22);
                 break;
-            case "iteratepure":
-                operations = new OperationGenerator(0,0,100,0);
-                break;
             default:
                 throw new RuntimeException("Wrong test type: " + testType);
         }
@@ -64,8 +59,6 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
         adaptiveList = impl.maker.get();
         adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
-
-        blackhole = bh;
     }
 
     @Setup(Level.Iteration)
@@ -78,16 +71,16 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
 
     @Benchmark
-    public void operationsRunner(){
+    public void operationsRunner(Blackhole bh){
         switch (operations.getOperation()){
             case 1:
-                contains();
+                contains(bh);
                 break;
             case 2:
                 insert();
                 break;
             case 3:
-                iterate();
+                iterate(bh);
                 break;
             case 4:
                 remove();
@@ -96,20 +89,20 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     }
 
-    public void contains() {
+    public void contains(Blackhole bh) {
         int index = valuesGenerator.generateIndex(generatorSize);
-        blackhole.consume(adaptiveList.contains(values[index]));
+        bh.consume(adaptiveList.contains(values[index]));
     }
 
     public void insert(){
         adaptiveList.add(values[valuesGenerator.generateIndex(generatorSize)]);
     }
 
-    public void iterate() {
+    public void iterate(Blackhole bh) {
         for(Object obj: adaptiveList){
             if (Thread.currentThread().isInterrupted())
                 break;
-            blackhole.consume(obj);
+            bh.consume(obj);
         }
     }
 
