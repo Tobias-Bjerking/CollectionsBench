@@ -1,24 +1,23 @@
 package se.su.dsv.online_concurrent;
 
-import org.openjdk.jmh.infra.Blackhole;
 import de.heidelberg.pvs.container_bench.generators.ElementGenerator;
 import de.heidelberg.pvs.container_bench.generators.GeneratorFactory;
 import de.heidelberg.pvs.container_bench.generators.PayloadType;
-import org.openjdk.jmh.annotations.*;
-import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.infra.Blackhole;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-//TODO
-// Use two element generators, one for populating at start and to be used in the delete method
-// and one to be used for adding new elements in the add method.
-public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
-
+public class OnlineConcurrentListBench extends AbstractOnlineConcurrentBench{
     private final int generatorSize = 1048576*2;
 
     @Param
-    OnlineConcurrentFact impl;
+    OnlineConcurrentListFact impl;
 
     String values[];
 
@@ -26,7 +25,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     Blackhole blackhole;
 
-    OnlineAdaptiveConcurrentDataStructure<Object> adaptiveList;
+    CopyOnWriteArrayList<Object> adaptiveList;
     OperationGenerator operations;
 
     @Param("STRING_UNIFORM")
@@ -37,7 +36,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     @Setup(Level.Trial)
     @SuppressWarnings("unchecked")
-    public void init(Blackhole bh) throws  IOException {
+    public void init(Blackhole bh) throws IOException {
         System.out.println("=====Initiating operation distibution: " + testType + "=====");
         switch (testType){
             case "even":
@@ -61,7 +60,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         values = valuesGenerator.generateArray(generatorSize);
 
         adaptiveList = impl.maker.get();
-        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
+        adaptiveList.addAll(Arrays.asList(Arrays.copyOfRange(values, 0, size)));
 
         blackhole = bh;
     }
@@ -71,11 +70,10 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     public void setup(Blackhole bh) throws IOException {
         operations.reset();
         adaptiveList = impl.maker.get();
-        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
+        adaptiveList.addAll(Arrays.asList(Arrays.copyOfRange(values, 0, size)));
     }
 
 
-    @Benchmark
     public void operationsRunner(){
         switch (operations.getOperation()){
             case 1:
@@ -103,6 +101,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         adaptiveList.add(values[valuesGenerator.generateIndex(generatorSize)]);
     }
 
+    @Benchmark
     public void iterate() {
         for(Object obj: adaptiveList){
             if (Thread.currentThread().isInterrupted())

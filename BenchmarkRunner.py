@@ -20,12 +20,13 @@ if num_arguments < 3:
 
 benchmarks = sys.argv[1] if num_arguments > 1 else 'Online'
 implementations = ('-p impl=' + sys.argv[2]) if num_arguments > 2 else ''
-warmup_iterations = sys.argv[3] if num_arguments > 3 else 1
-iterations = sys.argv[4] if num_arguments > 4 else 1
+warmup_iterations = sys.argv[3] if num_arguments > 3 else 5
+iterations = sys.argv[4] if num_arguments > 4 else 3
 iteration_time = sys.argv[5] if num_arguments > 5 else 10
 
-for t in ['iterate', 'iteratepure', 'update', 'even']:
-	for i in range(1, 4):
+#for t in ['iterate', 'iteratepure', 'update', 'even']:
+for t in ['iteratepure']:
+	for i in [0,1,4]:
 		threads = 2**i
 		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(2**i) + ".csv"
 		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time)
@@ -60,8 +61,8 @@ for x in all_files:
     y.close()
 f.close()
 
-
-df = pd.read_csv("./" + timestamp + "-merged.csv")
+#read file
+df = pd.read_csv(base_path + "/" + timestamp + "-merged.csv")
 
 plt.style.use('ggplot')
 
