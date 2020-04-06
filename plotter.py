@@ -10,10 +10,12 @@ plt.style.use('ggplot')
 
 for size in [128, 1024,8192,16384,131072,1048576]:
     for test in ['iterate', 'update', 'even']:
-        ax = plt.gca()
-        selected = df[(df['Param: size'] == size) & (df['Param: testType'] == test)]
-        sorted = selected.sort_values(['Threads'])
-        sorted.groupby(['Param: impl', 'Param: testType']).plot(kind='line',x='Threads',y='Score',ax=ax)
+        for impl in ['ONLINE_ADAPTIVE_LIST', 'ONLINE_ADAPTIVE_MAP', 'WRAPPED_MAP', 'WRAPPED_LIST']:
+            ax = plt.gca()
+            selected = df[(df['Param: size'] == size) & (df['Param: testType'] == test) & (df['Param: impl'] == impl)]
+            sorted = selected.sort_values(['Threads'])
+            sorted.plot(kind='line',x='Threads',y='Score',ax=ax,label=impl)
+        plt.legend(loc='upper left')
         plt.savefig(test + "_" + str(size)+".png")
         plt.clf()
 
