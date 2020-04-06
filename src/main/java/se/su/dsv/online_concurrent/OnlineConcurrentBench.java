@@ -26,8 +26,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
     OnlineAdaptiveConcurrentDataStructure<Object> adaptiveList;
     OperationGenerator operations;
-
-    int iterations = 0;
+    
 
     @Param("STRING_DICTIONARY")
     PayloadType payloadType;
@@ -65,8 +64,9 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
         operations.reset();
-        adaptiveList = impl.maker.get();
-        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
+        adaptiveList.evaluteSwitch();
+        //adaptiveList = impl.maker.get();
+        //adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
     }
 
 
