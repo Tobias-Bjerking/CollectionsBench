@@ -63,10 +63,10 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     @Setup(Level.Iteration)
     @SuppressWarnings("unchecked")
     public void setup(Blackhole bh) throws IOException {
+        adaptiveList.stop();
         operations.reset();
-        adaptiveList.evaluteSwitch();
-        //adaptiveList = impl.maker.get();
-        //adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
+        adaptiveList = impl.maker.get();
+        adaptiveList.setup(Arrays.copyOfRange(values, 0, size));
     }
 
 
