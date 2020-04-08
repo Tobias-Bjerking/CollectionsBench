@@ -20,7 +20,6 @@ import org.openjdk.jmh.annotations.Warmup;
 @Warmup(iterations = 20, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 40, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(2)
-@Threads(1)
 @State(Scope.Benchmark)
 public class AbstractOnlineConcurrentBench {
 
