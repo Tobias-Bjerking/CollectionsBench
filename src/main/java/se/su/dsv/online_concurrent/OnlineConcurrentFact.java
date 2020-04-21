@@ -1,5 +1,6 @@
 package se.su.dsv.online_concurrent;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import se.su.dsv.OnlineAdaptiveConcurrentDataStructure;
 
