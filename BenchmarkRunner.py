@@ -19,14 +19,14 @@ if num_arguments < 3:
 benchmarks = sys.argv[1] if num_arguments > 1 else 'Online'
 implementations = ('-p impl=' + sys.argv[2]) if num_arguments > 2 else ''
 warmup_iterations = sys.argv[3] if num_arguments > 3 else 10
-iterations = sys.argv[4] if num_arguments > 4 else 20
+iterations = sys.argv[4] if num_arguments > 4 else 3
 iteration_time = sys.argv[5] if num_arguments > 5 else 10
 
-for t in ['iterate', 'even', 'update']:
+for t in ['update', 'even', 'iterate']:
 	for i in range(0,6):
 		threads = 2**i
-		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(2**i) + ".csv"
-		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt -gc true".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time)
+		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ threads + ".csv"
+		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt -gc true -p threads={8}".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time, threads)
 
 		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 		while True:
