@@ -29,4 +29,7 @@ public class AbstractOnlineConcurrentBench {
     @Param({ "42" })
     protected int seed;
 
+    @Param({"1"})
+    protected int threads;
+
 }

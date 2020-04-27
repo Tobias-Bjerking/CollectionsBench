@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
-    private final int generatorSize = 1048576;
+    private final int generatorSize = 1048576*4;
 
     @Param
     OnlineConcurrentFact impl;
@@ -62,6 +62,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
 
         adaptiveList = impl.maker.get();
         adaptiveList.setup(toRemove.toArray());
+        adaptiveList.setThreads(threads);
     }
 
     @Setup(Level.Iteration)
@@ -69,9 +70,11 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
     public void setup(Blackhole bh) throws IOException {
         adaptiveList.stop();
         operations.reset();
+
         adaptiveList = impl.maker.get();
         toRemove = new ConcurrentLinkedDeque<>(Arrays.asList(valuesGenerator.generateArray(size)));
         adaptiveList.setup(toRemove.toArray());
+        adaptiveList.setThreads(threads);
     }
 
 

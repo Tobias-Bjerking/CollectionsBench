@@ -21,7 +21,7 @@ for size in sizes:
             ax = plt.gca()
             selected = df[(df['Param: size'] == size) & (df['Param: testType'] == test) & (df['Param: impl'] == impl)]
             grouped = selected.groupby('Threads').mean()
-            grouped.plot(kind='line',y='Score',ax=ax,label=names[impl])
+            grouped.plot(kind='line',marker='+',y='Score',ax=ax,label=names[impl])
         plt.legend(loc='upper left')
         plt.title(test + ": " + str(size) + " elements")
         plt.xlabel('Threads')
@@ -35,12 +35,12 @@ combined = {'ADAPTIVE' : ['ONLINE_ADAPTIVE_LIST', 'ONLINE_ADAPTIVE_MAP'],
 for size in sizes:
     for merged in ['ADAPTIVE', 'WRAPPED']:
         ax = plt.gca()
-        selected = df[(df['Param: size'] == size) & (df['Param: testType'] == test)]
+        selected = df[(df['Param: size'] == size)]
         selection1 = selected[selected['Param: impl'] == combined[merged][0]]
         selection2 = selected[selected['Param: impl'] == combined[merged][1]]
         selected = pd.concat([selection1,selection2])
         grouped = selected.groupby('Threads').mean()
-        grouped.plot(kind='line',y='Score',ax=ax,label=merged)
+        grouped.plot(kind='line',marker='+',y='Score',ax=ax,label=merged)
     plt.legend(loc='upper left')
     plt.title('average' + ": " + str(size) + " elements")
     plt.xlabel('Threads')
