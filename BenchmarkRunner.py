@@ -28,7 +28,7 @@ for impl in ['ONLINE_ADAPTIVE_LIST','ONLINE_ADAPTIVE_MAP','WRAPPED_MAP', 'WRAPPE
 		for i in range(0,6):
 			implementations = '-p impl=' + impl
 			threads = 2**i
-			file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(threads) + ".csv"
+			file_path = base_path + "/bench_" + impl +'_' + t + "_"+ str(threads) + ".csv"
 			bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt -gc true -p threads={8} -f {9}".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time, threads, forks)
 
 			process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
