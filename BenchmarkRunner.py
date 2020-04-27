@@ -23,19 +23,21 @@ iterations = sys.argv[4] if num_arguments > 4 else 10
 iteration_time = sys.argv[5] if num_arguments > 5 else 10
 forks = 4
 
-for t in ['update', 'even', 'iterate']:
-	for i in range(0,6):
-		threads = 2**i
-		file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(threads) + ".csv"
-		bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt -gc true -p threads={8} -f {9}".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time, threads, forks)
+for impl in ['ONLINE_ADAPTIVE_LIST','ONLINE_ADAPTIVE_MAP','WRAPPED_MAP', 'WRAPPED_LIST']:
+	for t in ['update', 'even', 'iterate']:
+		for i in range(0,6):
+			implementations = '-p impl=' + impl
+			threads = 2**i
+			file_path = base_path + "/bench_" + benchmarks + '-testType_' + t + "_threads-"+ str(threads) + ".csv"
+			bashCommand = "java -jar benchmarks.jar .*{4}.* {3} -p testType={5}  -rff {0} -r {7} -i {1} -wi {2} -t {6} -bm thrpt -gc true -p threads={8} -f {9}".format(file_path, iterations, warmup_iterations, implementations, benchmarks, t, threads, iteration_time, threads, forks)
 
-		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-		while True:
-			output = process.stdout.readline()
-			if output == '' and process.poll() is not None:
-				break
-			if output:
-				print output.strip()
+			process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+			while True:
+				output = process.stdout.readline()
+				if output == '' and process.poll() is not None:
+					break
+				if output:
+					print output.strip()
 
 
 #combine files.
