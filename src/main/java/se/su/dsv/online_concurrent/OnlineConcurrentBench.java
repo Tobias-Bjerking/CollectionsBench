@@ -102,6 +102,7 @@ public class OnlineConcurrentBench extends AbstractOnlineConcurrentBench{
         bh.consume(adaptiveList.contains(values[index]));
     }
 
+    // TODO add a dummy operation to simulate the overhead that exist from handling the values queue in add and remove.
     public void insert(){
         String item = values[valuesGenerator.generateIndex(generatorSize)];
         adaptiveList.add(item);
